@@ -1,15 +1,18 @@
 /* MainScreen.less */
+@import "constants.less";
+
 .main-screen-container {
+  background-color: @base-color;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  color: @text-color;
 }
 
 .main-title {
   font-size: 2rem;
-  color: #1976d2; /* Color primario similar a Material-UI */
+  color: @title-color; /* Color primario similar a Material-UI */
   margin-bottom: 20px;
 }
 
@@ -31,18 +34,43 @@
   border-radius: 4px;
 }
 
-.start-button {
+button {
   margin-top: 15px;
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #1976d2; /* Color primario similar a Material-UI */
-  color: #fff;
   border: none;
   border-radius: 4px;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
+  font-weight: 600;
+  color: #fff;
 
-  &:hover {
-    background-color: #1565c0; /* Color secundario similar a Material-UI */
-  }
+  // &:hover {
+  //   background-color: #1565c0; /* Color secundario similar a Material-UI */
+  // }
+}
+
+.start-button {
+  background-color: @primary-button-color; /* Color primario similar a Material-UI */
+
+  // &:hover {
+  //   background-color: #1565c0; /* Color secundario similar a Material-UI */
+  // }
+}
+
+.new-game-button {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  background-color: @secondary-button-color;
+  // &:hover {
+  //   background-color: #1565c0; /* Color secundario similar a Material-UI */
+  // }
+}
+
+input {
+  border-radius: 4px;
+  border: none;
+  font-size: large;
 }

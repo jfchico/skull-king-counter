@@ -1,0 +1,197 @@
+/* styles.less */
+@import "constants.less";
+
+.score-table {
+  margin: 0 20px;
+  // margin-top: 0;
+  // margin
+
+  .table-container {
+
+    @media (orientation: portrait) {
+      /* Agrega aquí los estilos para modo retrato */
+      max-width: 44vh;
+      overflow-x: auto;
+    }
+    
+    /* Estilos para dispositivos en modo apaisado */
+    @media (orientation: landscape) {
+      /* Agrega aquí los estilos para modo apaisado */
+      max-height: 64vh;
+      overflow-y: auto;
+      overflow-x: auto;
+      max-width: 207vh;
+    }
+
+    .modal {
+      button {
+        font-size: 1.8rem;
+        height: 40px;
+        width: 40px;
+        padding: 5px;
+        margin: 0;
+      }
+
+      h2 {
+        text-align: center;
+      }
+      
+      .modal-content {
+        &.skull-modal{
+          width: 184px;
+        }
+
+        .pirate-button {
+          background-color: @pirate-color;
+
+          &.disabled {
+            background-color: @pirate-color-disabled;
+          }
+        } 
+      
+        .mermaid-button {
+          background-color: @mermaid-color;
+          margin-right: 20px;
+
+          &.disabled {
+            background-color: @mermaid-color-disabled;
+          }
+        }
+  
+        .addition-button-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          margin: 20px;
+        }
+
+        .addition-container {
+          font-size: 1.8rem;
+          height: 45px;
+
+          .row-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+          }
+        }
+
+        .substract-button {
+          background-color: transparent;
+          right: 0;
+        }
+
+        .skull-king {
+          height: 20px;
+          color: @title-color;
+        }
+      }
+    
+      .accept-button {
+        font-size: 1rem;
+        background-color: @primary-button-color;
+        width: unset;
+        height: unset;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    thead {
+      background-color: #5e8891;;
+      border-radius: 4px;
+      position: sticky;
+      top: 0;
+
+      th {
+        padding: 12px;
+        text-align: left;
+        font-weight: bold;
+        border-bottom: none;
+        border-right: 1px solid #ddd; 
+        text-align: center;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+
+    tbody {
+      td {
+        padding: 12px;
+        border-bottom: none;
+        font-weight: 500;
+        text-align: center;
+
+        .round-inputs {
+          display: flex;
+          justify-content: space-between;
+
+          input {
+            height: 30px;
+          }
+          
+          .bet-input, .wins-input {
+            width: 40px;
+            text-align: center;
+            padding: 5px;
+            margin-right: 5px;
+            // font-size: 1.8rem;
+          }
+
+          .skull-king-button {
+            background-color: @skull-king-color;
+            font-size: 1.8rem;
+            height: 40px;
+            width: 40px;
+            padding: 5px;
+            margin: 0;
+          }
+
+          .skull-icon {
+            margin: 4px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+          }
+
+          .mermaid-icon-container {
+            color: @mermaid-color;
+          }
+          
+          .skull-icon-container {
+            color: @skull-king-color;
+          }
+        }
+        
+      border-right: 1px solid #ddd; 
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+      tr:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
+
+      tr:nth-child(even) {
+        background-color: #5e8891;
+      }
+
+      tr:nth-child(odd) {
+        background-color: #83a0a5;;
+      }
+    }
+  }
+}

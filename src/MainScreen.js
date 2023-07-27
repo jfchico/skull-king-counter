@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import PlayerNamesScreen from './PlayerNamesScreen';
 import ScoreTable from './ScoreTable';
 import Cookies from 'js-cookie';
+import { GiCrownedSkull } from 'react-icons/gi';
 
 import './MainScreen.less';
 
-const MIN_PLAYERS = 1;
-const MAX_PLAYERS = 6;
+const MIN_PLAYERS = 3;
+const MAX_PLAYERS = 10;
 const COOKIE_NAME = 'skullKingGame';
 
 const MainScreen = () => {
@@ -30,6 +31,10 @@ const MainScreen = () => {
     generateGame();
   }, [players]);
 
+  useEffect(() => {
+    console.log("🚀 ~ file: MainScreen.js:36 ~ MainScreen ~ game:", game)
+  }, [game]);
+
   const handleNumPlayersChange = (event) => {
     setNumPlayers(event.target.value);
   };
@@ -42,12 +47,24 @@ const MainScreen = () => {
     }
   };
 
+  const getNumberOfRounds = () => {
+    const cards = 66;
+    let numRounds = 10;
+    const numPlayers = players.length;
+
+    if (numPlayers > 6) {
+      numRounds= Math.floor(cards / numPlayers);
+    }
+
+    return numRounds;
+  };
+
   const generateGame = () => {
     const newGame = [];
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= getNumberOfRounds(); i++) {
       const round = [];
       players.forEach(player => {
-        round.push({playerName: player, bet: 0, score: 0, wins: 0});
+        round.push({playerName: player, bet: '', score: 0, wins: '', mermaidOnSkull: 0, skullOnPirates: 0});
       });
       newGame.push(round);
     }
@@ -97,8 +114,10 @@ const MainScreen = () => {
 
   return (
     <div className="main-screen-container">
-      <h1 className="main-title">Skull King - Contador de Puntos</h1>
-      <button className="delete-game" onClick={newGame}>Nuevo Juego</button>
+      <h1 className="main-title">Skull <GiCrownedSkull/> King</h1>
+      {showScoreTable &&
+        <button className="new-game-button" onClick={newGame}>Nuevo Juego</button>
+      }
       {!showPlayerNames && !showScoreTable && (
         <div className="form-container">
           <label htmlFor="numPlayers" className="form-label">

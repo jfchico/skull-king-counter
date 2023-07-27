@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
+import './MainScreen.less';
+import './PlayerNamesScreen.less';
+
 const PlayerNamesScreen = ({ numPlayers, onStartGame }) => {
   const [playerNames, setPlayerNames] = useState([]);
 
   useEffect(() => {
     const arr = [];
     for (let i = 1; i <= numPlayers; i++) {
-      arr.push('jugador_' + i);
+      arr.push('pepe');
     }
     setPlayerNames(arr);
   }, [numPlayers]); 
@@ -29,11 +32,12 @@ const PlayerNamesScreen = ({ numPlayers, onStartGame }) => {
   };
 
   return (
-    <div>
-      <h2>Introduce los nombres de los jugadores:</h2>
-      <div>
+    <div className="player-names-container">
+      <h2>Jugadores</h2>
+      <div className="player-names-input-container">
         {playerNames.map((name, index) => (
           <input
+            className="player-name-input"
             key={index}
             type="text"
             placeholder={`Jugador ${index + 1}`}
@@ -42,7 +46,7 @@ const PlayerNamesScreen = ({ numPlayers, onStartGame }) => {
           />
         ))}
       </div>
-      <button onClick={handleStartGame}>Iniciar Juego</button>
+      <button className="start-button" onClick={handleStartGame}>Iniciar Juego</button>
     </div>
   );
 };
