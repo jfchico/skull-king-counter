@@ -9,7 +9,7 @@ const PlayerNamesScreen = ({ numPlayers, onStartGame }) => {
   useEffect(() => {
     const arr = [];
     for (let i = 1; i <= numPlayers; i++) {
-      arr.push('pepe');
+      arr.push('');
     }
     setPlayerNames(arr);
   }, [numPlayers]); 

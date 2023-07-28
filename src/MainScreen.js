@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PlayerNamesScreen from './PlayerNamesScreen';
 import ScoreTable from './ScoreTable';
 import Cookies from 'js-cookie';
-import { GiCrownedSkull } from 'react-icons/gi';
+import { GiCrownedSkull, GiSkullBolt } from 'react-icons/gi';
+
+import Modal from './Modal';
 
 import './MainScreen.less';
 
@@ -16,12 +18,13 @@ const MainScreen = () => {
   const [showScoreTable, setShowScoreTable] = useState(false);
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState([]);
+  const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
 
   // useEffect(() => {
   //   // Cargar el estado de la partida desde las cookies al cargar el componente
   //   const loadedGame = loadGameFromCookies();
-  //   if (loadedGame && loadedGame.length) {
-  //     console.log("🚀 ~ file: MainScreen.js:17 ~ useEffect ~ loadedGame:", JSON.parse(loadedGame));
+  //   console.log("🚀 ~ file: MainScreen.js:17 ~ useEffect ~ loadedGame:", loadedGame);
+  //   if (loadedGame && loadedGame[0]?.length) {
   //     setGame(loadedGame);
   //     setShowScoreTable(true);
   //   }
@@ -31,9 +34,10 @@ const MainScreen = () => {
     generateGame();
   }, [players]);
 
-  useEffect(() => {
-    console.log("🚀 ~ file: MainScreen.js:36 ~ MainScreen ~ game:", game)
-  }, [game]);
+  // useEffect(() => {
+  //   saveGameToCookies();
+  //   console.log("🚀 ~ file: MainScreen.js:36 ~ MainScreen ~ game:", game)
+  // }, [game]);
 
   const handleNumPlayersChange = (event) => {
     setNumPlayers(event.target.value);
@@ -82,18 +86,18 @@ const MainScreen = () => {
     setShowScoreTable(true);
   };
 
-  const saveGameToCookies = () => {
-    // Guardar el estado de la partida en las cookies
-    Cookies.remove(COOKIE_NAME, { path: '' });
-    Cookies.set(COOKIE_NAME, JSON.stringify(game), { path: '' });
-    // Cookies.set(COOKIE_NAME, JSON.stringify(game));
-  };
+  // const saveGameToCookies = () => {
+  //   // Guardar el estado de la partida en las cookies
+  //   Cookies.remove(COOKIE_NAME, { path: '' });
+  //   Cookies.set(COOKIE_NAME, JSON.stringify(game), { path: '' });
+  //   // Cookies.set(COOKIE_NAME, JSON.stringify(game));
+  // };
 
-  const loadGameFromCookies = () => {
-    // Cargar el estado de la partida desde las cookies
-    const gameData = Cookies.get(COOKIE_NAME);
-    return gameData;
-  };
+  // const loadGameFromCookies = () => {
+  //   // Cargar el estado de la partida desde las cookies
+  //   const gameData = Cookies.get(COOKIE_NAME);
+  //   return JSON.parse(gameData);
+  // };
 
   const newGame = () => {
     setNumPlayers(MIN_PLAYERS);
@@ -112,11 +116,24 @@ const MainScreen = () => {
     return options;
   }
 
+  const handleCloseNewGameModal = () => {
+    setIsNewGameModalOpen(false);
+  }
+
+  const handleOpenNewGameModal = () => {
+    setIsNewGameModalOpen(true);
+  }
+
+  const handleStartNewGame = () => {
+    handleCloseNewGameModal();
+    newGame();
+  }
+
   return (
     <div className="main-screen-container">
       <h1 className="main-title">Skull <GiCrownedSkull/> King</h1>
       {showScoreTable &&
-        <button className="new-game-button" onClick={newGame}>Nuevo Juego</button>
+        <button className="new-game-button" onClick={handleOpenNewGameModal}><GiSkullBolt/></button>
       }
       {!showPlayerNames && !showScoreTable && (
         <div className="form-container">
@@ -144,6 +161,15 @@ const MainScreen = () => {
           game={[...game]}
           setGame={setGame}
         />
+      )}
+      {isNewGameModalOpen && (
+        <Modal isOpen={isNewGameModalOpen} onClose={handleCloseNewGameModal}>
+          <h2>¿Seguro que quieres empezar un juego nuevo?</h2>
+          <div className="new-game-buttons-container">
+            <button className="start-button" onClick={handleStartNewGame}>Sí!</button>
+            <button className="cancel-button" onClick={handleCloseNewGameModal}>Mmm, mejor no</button>
+          </div>
+        </Modal>
       )}
     </div>
   );

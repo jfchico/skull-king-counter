@@ -59,6 +59,7 @@ const ScoreTable = ({ game, setGame }) => {
       return (
         <div className="round-inputs">
           <input
+            type="number"
             className="bet-input"
             value={game[roundIndex][playerIndex].bet}
             onChange={(e) =>
@@ -66,6 +67,7 @@ const ScoreTable = ({ game, setGame }) => {
             }
           />
           <input
+            type="number"
             className="wins-input"
             value={game[roundIndex][playerIndex].wins}
             onChange={(e) =>
