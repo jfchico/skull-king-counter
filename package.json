@@ -149,5 +149,6 @@
   },
   "devDependencies": {
     "gh-pages": "^5.0.0"
-  }
+  },
+  "homepage": "http://jfchico.github.io/skull-king-counter"
 }
