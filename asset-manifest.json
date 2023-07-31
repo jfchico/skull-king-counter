@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/skull-king-counter/static/css/main.ab2d8fa6.css",
-    "main.js": "/skull-king-counter/static/js/main.e7db7861.js",
+    "main.css": "/skull-king-counter/static/css/main.a84aee57.css",
+    "main.js": "/skull-king-counter/static/js/main.a9c442a1.js",
     "static/js/787.4563c489.chunk.js": "/skull-king-counter/static/js/787.4563c489.chunk.js",
     "index.html": "/skull-king-counter/index.html",
-    "main.ab2d8fa6.css.map": "/skull-king-counter/static/css/main.ab2d8fa6.css.map",
-    "main.e7db7861.js.map": "/skull-king-counter/static/js/main.e7db7861.js.map",
+    "main.a84aee57.css.map": "/skull-king-counter/static/css/main.a84aee57.css.map",
+    "main.a9c442a1.js.map": "/skull-king-counter/static/js/main.a9c442a1.js.map",
     "787.4563c489.chunk.js.map": "/skull-king-counter/static/js/787.4563c489.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ab2d8fa6.css",
-    "static/js/main.e7db7861.js"
+    "static/css/main.a84aee57.css",
+    "static/js/main.a9c442a1.js"
   ]
 }
