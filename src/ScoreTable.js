@@ -15,6 +15,7 @@ const ScoreTable = ({ game, setGame }) => {
   const [isDisabledMermaids, setIsDisabledMermaids] = useState(false);
   const [modalOnPlayer, setModalOnPlayer] = useState(null);
   const [isVictoryModalOpen, setIsVictoryModalOpen] = useState(false);
+  const [editScore, setEditScore] = useState({open: false});
 
   useEffect(() => {
     // Ajustar la altura de la cabecera al cargar el componente
@@ -80,7 +81,7 @@ const ScoreTable = ({ game, setGame }) => {
         </div>
       );
     } else if (currentRound > roundIndex){
-      return (<span>{game[roundIndex][playerIndex].score}</span>);
+      return (<span onClick={() => setEditScore({roundIndex, playerIndex, open: true, score: game[roundIndex][playerIndex].score})}>{game[roundIndex][playerIndex].score}</span>);
     } else {
       // blank
       return (<span/>);
@@ -116,8 +117,13 @@ const ScoreTable = ({ game, setGame }) => {
   }
 
   const onScoreChange = (roundIndex, playerIndex, field, value) => {
-    value = parseInt(value);
-    if (value >= 0) {
+    if (value === '') {
+      value = '' ;
+    } else {
+      value = parseInt(value);
+    }
+
+    if (value >= 0 || value === '') {
       game[roundIndex][playerIndex][field] = value;
       setGame(game);
     }
@@ -214,6 +220,14 @@ const ScoreTable = ({ game, setGame }) => {
     return winnerName;
   }
 
+  const onEditScore = () => {
+    const {roundIndex, playerIndex, score} = editScore;
+    game[roundIndex][playerIndex].score = parseInt(score);
+
+    setEditScore({open: false});
+    setGame(game);
+  }
+
   return (
     <div className="score-table">
       {game.length && 
@@ -256,13 +270,30 @@ const ScoreTable = ({ game, setGame }) => {
           </Modal>
         </div>
       }
-      {currentRound <= game.length - 1 && <button className="start-button" onClick={onNextRound}>{currentRound >= game.length - 1 ? "Terminar" : "Siguiente ronda"}</button>}
+      {currentRound <= game.length - 1 && <button className="next-round-button" onClick={onNextRound}>{currentRound >= game.length - 1 ? "Terminar" : "Siguiente ronda"}</button>}
       {currentRound > game.length - 1 &&
         <Modal isOpen={isVictoryModalOpen} onClose={() => setIsVictoryModalOpen(false)}>
           <div className="modal-content">
             <h2></h2>
             <h2><GiCrownedSkull className="skull-king" /> {getWinnerName() + ", eres el Skull King!"} <GiCrownedSkull className="skull-king"/></h2>
           </div>
+        </Modal>
+      }
+      {editScore.open && 
+        <Modal isOpen={editScore.open} onClose={() => setEditScore({open: false})}>
+          <h2>Editando la puntuación de la ronda {editScore.roundIndex} para {game[editScore.roundIndex][editScore.playerIndex].playerName}</h2>
+          <div className="modal-content">
+            <input
+              type="number"
+              className="edit-score-input"
+              value={editScore.score}
+              onChange={(e) =>
+                setEditScore({...editScore, score: e.target.value})
+              }
+            />
+          </div>
+
+          <button className="accept-button" onClick={onEditScore}>Aceptar</button>
         </Modal>
       }
     </div>
