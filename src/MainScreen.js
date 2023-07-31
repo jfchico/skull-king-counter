@@ -23,7 +23,7 @@ const MainScreen = () => {
   useEffect(() => {
     // Cargar el estado de la partida desde las cookies al cargar el componente
     const loadedGame = loadGame();
-    if (!game[0]?.length && loadedGame.game && loadedGame.game[0]?.length) {
+    if (!game[0]?.length && loadedGame?.game[0]?.length) {
       setGame(loadedGame.game);
       setCurrentRound(loadedGame.currentRound);
       setShowScoreTable(true);
