@@ -15,7 +15,6 @@ const PlayerNamesScreen = ({ numPlayers, onStartGame }) => {
   }, [numPlayers]); 
 
 
-
   const handlePlayerNameChange = (index, event) => {
     const updatedPlayerNames = [...playerNames];
     updatedPlayerNames[index] = event.target.value;

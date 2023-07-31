@@ -6,8 +6,7 @@ import Modal from './Modal';
 import './MainScreen.less';
 import './ScoreTable.less';
 
-const ScoreTable = ({ game, setGame }) => {
-  const [currentRound, setCurrentRound] = useState(0);
+const ScoreTable = ({ game, setGame, currentRound, setCurrentRound }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [numOfPirates, setNumOfPirates] = useState(0);
   const [numOfMermaids, setNumOfMermaids] = useState(0);

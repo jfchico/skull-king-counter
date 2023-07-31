@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PlayerNamesScreen from './PlayerNamesScreen';
 import ScoreTable from './ScoreTable';
-import Cookies from 'js-cookie';
 import { GiCrownedSkull, GiSkullBolt } from 'react-icons/gi';
 
 import Modal from './Modal';
@@ -13,6 +12,7 @@ const MAX_PLAYERS = 10;
 const COOKIE_NAME = 'skullKingGame';
 
 const MainScreen = () => {
+  const [currentRound, setCurrentRound] = useState(0);
   const [numPlayers, setNumPlayers] = useState(MIN_PLAYERS);
   const [showPlayerNames, setShowPlayerNames] = useState(false);
   const [showScoreTable, setShowScoreTable] = useState(false);
@@ -20,24 +20,19 @@ const MainScreen = () => {
   const [game, setGame] = useState([]);
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
 
-  // useEffect(() => {
-  //   // Cargar el estado de la partida desde las cookies al cargar el componente
-  //   const loadedGame = loadGameFromCookies();
-  //   console.log("🚀 ~ file: MainScreen.js:17 ~ useEffect ~ loadedGame:", loadedGame);
-  //   if (loadedGame && loadedGame[0]?.length) {
-  //     setGame(loadedGame);
-  //     setShowScoreTable(true);
-  //   }
-  // }, []);
+  useEffect(() => {
+    // Cargar el estado de la partida desde las cookies al cargar el componente
+    const loadedGame = loadGame();
+    if (!game[0]?.length && loadedGame.game && loadedGame.game[0]?.length) {
+      setGame(loadedGame.game);
+      setCurrentRound(loadedGame.currentRound);
+      setShowScoreTable(true);
+    }
+  }, []);
 
   useEffect(() => {
-    generateGame();
-  }, [players]);
-
-  // useEffect(() => {
-  //   saveGameToCookies();
-  //   console.log("🚀 ~ file: MainScreen.js:36 ~ MainScreen ~ game:", game)
-  // }, [game]);
+    saveGame();
+  }, [game]);
 
   const handleNumPlayersChange = (event) => {
     setNumPlayers(event.target.value);
@@ -51,7 +46,7 @@ const MainScreen = () => {
     }
   };
 
-  const getNumberOfRounds = () => {
+  const getNumberOfRounds = (players) => {
     const cards = 66;
     let numRounds = 10;
     const numPlayers = players.length;
@@ -63,9 +58,9 @@ const MainScreen = () => {
     return numRounds;
   };
 
-  const generateGame = () => {
+  const generateGame = (players) => {
     const newGame = [];
-    for (let i = 1; i <= getNumberOfRounds(); i++) {
+    for (let i = 1; i <= getNumberOfRounds(players); i++) {
       const round = [];
       players.forEach(player => {
         round.push({playerName: player, bet: '', score: 0, wins: '', mermaidOnSkull: 0, skullOnPirates: 0});
@@ -80,24 +75,20 @@ const MainScreen = () => {
     // Asignar nombres de jugadores y mostrar la tabla de puntuaciones
     // playerNames es un array con los nombres de los jugadores en el mismo orden que sus índices en la tabla
     setShowPlayerNames(false);
-    setPlayers(playerNames);
+    generateGame(playerNames);
 
     // Mostrar la tabla de puntuaciones
     setShowScoreTable(true);
   };
 
-  // const saveGameToCookies = () => {
-  //   // Guardar el estado de la partida en las cookies
-  //   Cookies.remove(COOKIE_NAME, { path: '' });
-  //   Cookies.set(COOKIE_NAME, JSON.stringify(game), { path: '' });
-  //   // Cookies.set(COOKIE_NAME, JSON.stringify(game));
-  // };
+  const saveGame = () => {
+    localStorage.setItem(COOKIE_NAME, JSON.stringify({currentRound, game}));
+  };
 
-  // const loadGameFromCookies = () => {
-  //   // Cargar el estado de la partida desde las cookies
-  //   const gameData = Cookies.get(COOKIE_NAME);
-  //   return JSON.parse(gameData);
-  // };
+  const loadGame = () => {
+    const gameData = localStorage.getItem(COOKIE_NAME);
+    return JSON.parse(gameData);
+  };
 
   const newGame = () => {
     setNumPlayers(MIN_PLAYERS);
@@ -105,6 +96,7 @@ const MainScreen = () => {
     setShowScoreTable(false);
     setPlayers([]);
     setGame([]);
+    setCurrentRound(0);
   }
 
   const drawOptions = () => {
@@ -153,13 +145,15 @@ const MainScreen = () => {
           </button>
         </div>
       )}
-      {showPlayerNames && (
+      {showPlayerNames && !showScoreTable && (
         <PlayerNamesScreen numPlayers={numPlayers} onStartGame={handleStartGameWithPlayers} />
       )}
       {showScoreTable && (
         <ScoreTable
           game={[...game]}
           setGame={setGame}
+          currentRound={currentRound}
+          setCurrentRound={setCurrentRound}
         />
       )}
       {isNewGameModalOpen && (
