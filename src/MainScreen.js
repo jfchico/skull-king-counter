@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PlayerNamesScreen from './PlayerNamesScreen';
 import ScoreTable from './ScoreTable';
 import { GiCrownedSkull, GiSkullBolt } from 'react-icons/gi';
+import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 
 import Modal from './Modal';
 
@@ -19,6 +20,7 @@ const MainScreen = () => {
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState([]);
   const [isNewGameModalOpen, setIsNewGameModalOpen] = useState(false);
+  const isKeyboardOpen = useDetectKeyboardOpen();
 
   useEffect(() => {
     // Cargar el estado de la partida desde las cookies al cargar el componente
@@ -122,7 +124,7 @@ const MainScreen = () => {
   }
 
   return (
-    <div className="main-screen-container">
+    <div className={`main-screen-container ${isKeyboardOpen ? 'keyboard-open' : ''}`}>
       <h1 className="main-title">Skull <GiCrownedSkull/> King</h1>
       {showScoreTable &&
         <button className="new-game-button" onClick={handleOpenNewGameModal}><GiSkullBolt/></button>

@@ -1,24 +1,117 @@
 /* styles.less */
 @import "constants.less";
 
-.score-table {
+.score-container {
   margin: 0 20px;
 
-  .table-container {
+  .score-view {
 
-    @media (orientation: portrait) {
-      /* Agrega aquí los estilos para modo retrato */
-      max-width: 44vh;
-      overflow-x: auto;
+    &.keyboard-close {
+      @media (orientation: portrait) {
+        width: 44vh;
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+      }
+      
+      @media (orientation: landscape) {
+        height: 58vh;
+        overflow-y: auto;
+        overflow-x: auto;
+        width: 200vh;
+      }
     }
-    
-    /* Estilos para dispositivos en modo apaisado */
-    @media (orientation: landscape) {
-      /* Agrega aquí los estilos para modo apaisado */
-      max-height: 64vh;
-      overflow-y: auto;
-      overflow-x: auto;
-      max-width: 207vh;
+
+    &.keyboard-open {
+      @media (orientation: portrait) {
+        width: 44vh;
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 30vh;
+      }
+      
+      @media (orientation: landscape) {
+        height: 58vh;
+        overflow-y: auto;
+        overflow-x: auto;
+        width: 200vh;
+      }
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: 
+        repeat(
+          auto-fit,
+          minmax(160px, 1fr)
+        );
+      gap: 5px;
+
+      .player-score-container {
+        width: 160px;
+        height: 160px;
+        background-color: @base-layer-color;
+        border-radius: 4px;
+        margin: 5px 5px 5px 0;
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        text-align: center;        
+        justify-content: space-between;
+        padding: 10px 4px;
+
+        .player-name {
+          font-weight: 600;
+          font-size: 1.2rem;
+        }
+
+        .player-score {
+          font-weight: 600;
+          font-size: 1.5rem;
+          color: @title-color;
+        }
+      }
+    }
+
+    .round-inputs {
+      display: flex;
+      justify-content: space-evenly;
+
+      input {
+        height: 30px;
+      }
+      
+      .bet-input, .wins-input {
+        width: 40px;
+        text-align: center;
+        padding: 5px;
+        margin-right: 5px;
+        // font-size: 1.8rem;
+      }
+
+      .skull-king-button {
+        background-color: @skull-king-color;
+        font-size: 1.8rem;
+        height: 40px;
+        width: 40px;
+        padding: 5px;
+        margin: 0;
+      }
+
+      .skull-icon {
+        margin: 4px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .mermaid-icon-container {
+        color: @mermaid-color;
+      }
+      
+      .skull-icon-container {
+        color: @skull-king-color;
+      }
     }
 
     .modal {
@@ -128,49 +221,8 @@
         border-bottom: none;
         font-weight: 500;
         text-align: center;
-
-        .round-inputs {
-          display: flex;
-          justify-content: space-between;
-
-          input {
-            height: 30px;
-          }
-          
-          .bet-input, .wins-input {
-            width: 40px;
-            text-align: center;
-            padding: 5px;
-            margin-right: 5px;
-            // font-size: 1.8rem;
-          }
-
-          .skull-king-button {
-            background-color: @skull-king-color;
-            font-size: 1.8rem;
-            height: 40px;
-            width: 40px;
-            padding: 5px;
-            margin: 0;
-          }
-
-          .skull-icon {
-            margin: 4px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-          }
-
-          .mermaid-icon-container {
-            color: @mermaid-color;
-          }
-          
-          .skull-icon-container {
-            color: @skull-king-color;
-          }
-        }
         
-      border-right: 1px solid #ddd; 
+        border-right: 1px solid #ddd; 
 
         &:last-child {
           border-right: none;
@@ -207,5 +259,27 @@
     margin-right: 5px;
     padding: 5px;
   }
+
+  .winner-message {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
     
+  .change-view-button {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.8rem;
+    background-color: transparent;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 0;
+  }
+
+    .round-container {
+      margin-bottom: 5px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
 }

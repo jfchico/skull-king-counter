@@ -6,14 +6,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh;
   color: @text-color;
+  overflow: hidden;
+
+  .keyboard-open {
+    height: 50vh;
+  }
 }
 
 .main-title {
   font-size: 2rem;
   color: @title-color; /* Color primario similar a Material-UI */
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .form-container {

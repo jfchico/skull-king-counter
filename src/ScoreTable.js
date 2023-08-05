@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { GiCrownedSkull, GiMermaid, GiPirateSkull } from 'react-icons/gi';
 import { AiFillMinusCircle } from 'react-icons/ai';
+import { MdViewList, MdViewModule } from 'react-icons/md';
+import useDetectKeyboardOpen from 'use-detect-keyboard-open';
 import Modal from './Modal';
 
 import './MainScreen.less';
@@ -15,6 +17,8 @@ const ScoreTable = ({ game, setGame, currentRound, setCurrentRound }) => {
   const [modalOnPlayer, setModalOnPlayer] = useState(null);
   const [isVictoryModalOpen, setIsVictoryModalOpen] = useState(false);
   const [editScore, setEditScore] = useState({open: false});
+  const [displayTable, setDisplayTable] = useState(false);
+  const isKeyboardOpen = useDetectKeyboardOpen();
 
   useEffect(() => {
     // Ajustar la altura de la cabecera al cargar el componente
@@ -53,34 +57,42 @@ const ScoreTable = ({ game, setGame, currentRound, setCurrentRound }) => {
       setIsVictoryModalOpen(true);
   }, [currentRound]);
 
+  const getCurrentRoundCell = (roundIndex, playerIndex) => {
+    return (
+      <div className="round-inputs">
+        <input
+          type="number"
+          className="bet-input"
+          value={game[roundIndex][playerIndex].bet}
+          onChange={(e) =>
+            onScoreChange(roundIndex, playerIndex, 'bet', e.target.value)
+          }
+        />
+        <input
+          type="number"
+          className="wins-input"
+          value={game[roundIndex][playerIndex].wins}
+          onChange={(e) =>
+            onScoreChange(roundIndex, playerIndex, 'wins', e.target.value)
+          }
+        />
+        <button className="skull-king-button" onClick={() => handleOpenModal(playerIndex)}><GiCrownedSkull /></button>
+        {!!game[roundIndex][playerIndex].mermaidOnSkull && <div className="skull-icon mermaid-icon-container"><GiMermaid /></div>}
+        {!!game[roundIndex][playerIndex].skullOnPirates && <div className="skull-icon skull-icon-container"><GiCrownedSkull /></div>}
+      </div>
+    );
+  }
+
+  const getPastRoundCell = (roundIndex, playerIndex) => {
+    return (<span onClick={() => setEditScore({roundIndex, playerIndex, open: true, score: game[roundIndex][playerIndex].score})}>{game[roundIndex][playerIndex].bet} | {game[roundIndex][playerIndex].wins} | {game[roundIndex][playerIndex].score}</span>);
+  }
+
   const drawCell = (roundIndex, playerIndex) => {
     if (currentRound === roundIndex) {
       // editable
-      return (
-        <div className="round-inputs">
-          <input
-            type="number"
-            className="bet-input"
-            value={game[roundIndex][playerIndex].bet}
-            onChange={(e) =>
-              onScoreChange(roundIndex, playerIndex, 'bet', e.target.value)
-            }
-          />
-          <input
-            type="number"
-            className="wins-input"
-            value={game[roundIndex][playerIndex].wins}
-            onChange={(e) =>
-              onScoreChange(roundIndex, playerIndex, 'wins', e.target.value)
-            }
-          />
-          <button className="skull-king-button" onClick={() => handleOpenModal(playerIndex)}><GiCrownedSkull /></button>
-          {!!game[roundIndex][playerIndex].mermaidOnSkull && <div className="skull-icon mermaid-icon-container"><GiMermaid /></div>}
-          {!!game[roundIndex][playerIndex].skullOnPirates && <div className="skull-icon skull-icon-container"><GiCrownedSkull /></div>}
-        </div>
-      );
+      return getCurrentRoundCell(roundIndex, playerIndex);
     } else if (currentRound > roundIndex){
-      return (<span onClick={() => setEditScore({roundIndex, playerIndex, open: true, score: game[roundIndex][playerIndex].score})}>{game[roundIndex][playerIndex].score}</span>);
+      return getPastRoundCell(roundIndex, playerIndex);
     } else {
       // blank
       return (<span/>);
@@ -227,33 +239,68 @@ const ScoreTable = ({ game, setGame, currentRound, setCurrentRound }) => {
     setGame(game);
   }
 
-  return (
-    <div className="score-table">
-      {game.length && 
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Ronda</th>
-                {getPlayersNames().map((player, index) => (
-                  <th key={index}>{player}</th>
+  const getGridScore = (playerIndex) => {
+    const roundIndex = currentRound > 0 ? currentRound - 1 : 0;
+    return <span className="player-score" onClick={() => currentRound > 0 && setEditScore({roundIndex, playerIndex, open: true, score: game[roundIndex][playerIndex].score})}>{game[roundIndex][playerIndex].score}</span>
+  }
+
+  const displayView = () => {
+    if (displayTable) {
+      return (
+        <table>
+          <thead>
+            <tr>
+              <th>Ronda</th>
+              {getPlayersNames().map((player, index) => (
+                <th key={index}>{player}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {game.map((round, roundIndex) => (
+              <tr key={roundIndex}>
+                <td>{roundIndex + 1}</td>
+                {getPlayersNames().map((_, playerIndex) => (
+                  <td key={playerIndex}>
+                    {drawCell(roundIndex, playerIndex)}
+                  </td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {game.map((round, roundIndex) => (
-                <tr key={roundIndex}>
-                  <td>{roundIndex + 1}</td>
-                  {getPlayersNames().map((_, playerIndex) => (
-                    <td key={playerIndex}>
-                      {drawCell(roundIndex, playerIndex)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
+      );
+    } else {
+      const displayingRound = currentRound >= game.length ? currentRound -1: currentRound;
+      return (
+        <div className="score-grid">
+          {
+            game[displayingRound].map((player, playerIndex) => {
+            return (
+              <div className="player-score-container">
+                <span className="player-name">{player.playerName}</span>
+                {getGridScore(playerIndex)}
+                {getCurrentRoundCell(displayingRound, playerIndex)}
+              </div>
+            ); 
+            })
+          }
+        </div>
+      );
+    }
+  }
 
+  return (
+    <div className="score-container">
+      <button className="accept-button change-view-button" onClick={() => setDisplayTable(!displayTable)}>{displayTable ? <MdViewModule /> : <MdViewList />}</button>
+      {game.length && 
+        <>
+          <div className="round-container">
+            <span className="round-label">Ronda </span>
+            <span className="round-value">{currentRound + 1}</span>
+          </div>
+        <div className={`score-view ${isKeyboardOpen ? 'keyboard-open' : 'keyboard-close'}`}>
+          {displayView()}
           <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
             <h2>Skull<GiCrownedSkull />King!</h2>
             <div className="modal-content skull-modal">
@@ -268,13 +315,15 @@ const ScoreTable = ({ game, setGame, currentRound, setCurrentRound }) => {
             <button className="accept-button" onClick={handleAcceptCloseModal}><GiCrownedSkull /> PUM!</button>
           </Modal>
         </div>
+        </>
       }
       {currentRound <= game.length - 1 && <button className="next-round-button" onClick={onNextRound}>{currentRound >= game.length - 1 ? "Terminar" : "Siguiente ronda"}</button>}
       {currentRound > game.length - 1 &&
         <Modal isOpen={isVictoryModalOpen} onClose={() => setIsVictoryModalOpen(false)}>
-          <div className="modal-content">
-            <h2></h2>
-            <h2><GiCrownedSkull className="skull-king" /> {getWinnerName() + ", eres el Skull King!"} <GiCrownedSkull className="skull-king"/></h2>
+          <div className="modal-content winner-message">
+            <h2>{getWinnerName()}</h2>
+            <h2>Eres el Skull King!<GiCrownedSkull className="skull-king" /></h2>
+            <button className="accept-button" onClick={() => setIsVictoryModalOpen(false)}><GiCrownedSkull /> PUM!</button>
           </div>
         </Modal>
       }
